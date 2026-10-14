@@ -58,8 +58,8 @@
 {# Related posts: find posts sharing at least one category #}
 {% if page.taxonomies.categories is defined %}
   {% set_global related = [] %}
-  {% set blog = get_section(path="blog/_index.md") %}
-  {% for post in blog.pages %}
+  {% set devlog = get_section(path="devlog/_index.md") %}
+  {% for post in devlog.pages %}
     {% if post.permalink != page.permalink and related | length < 6 and post.taxonomies.categories is defined %}
       {% set_global match = false %}
       {% for cat in post.taxonomies.categories %}

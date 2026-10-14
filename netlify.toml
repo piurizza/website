@@ -21,6 +21,16 @@
     Permissions-Policy = "geolocation=(), microphone=()"
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
 
+[[redirects]]
+  from = "/blog/*"
+  to = "/devlog/"
+  status = 301
+
+[[redirects]]
+  from = "/about"
+  to = "/"
+  status = 301
+
 [context.deploy-preview]
   [[context.deploy-preview.headers]]
     for = "/*"

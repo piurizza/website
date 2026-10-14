@@ -48,11 +48,21 @@ verify-source:
         "Zola version pinned in Netlify config"
 
     # Content
-    check "$(test -f content/blog/_index.md && echo true || echo false)" \
-        "Blog section index exists"
+    check "$(test -f content/devlog/_index.md && echo true || echo false)" \
+        "Devlog section index exists"
 
-    check "$(test -f content/about.md && echo true || echo false)" \
-        "About page exists"
+    check "$(test -f content/_index.md && echo true || echo false)" \
+        "About (home) section index exists"
+
+    # Redirects for retired URLs
+    check "$(grep -q '/blog/\*' netlify.toml && echo true || echo false)" \
+        "Legacy /blog/ URLs redirect"
+
+    # Placeholder feed must go once Zola generates the real one (static would override it)
+    if ls content/devlog/*.md 2>/dev/null | grep -qv _index; then
+        check "$(test ! -f static/atom.xml && echo true || echo false)" \
+            "No placeholder static/atom.xml once devlog posts exist"
+    fi
 
     # Accessibility
     check "$(grep -q 'sr-only' templates/base.html && echo true || echo false)" \
@@ -65,8 +75,8 @@ verify-source:
     check "$(test -f templates/base.html && echo true || echo false)" \
         "Base template exists"
 
-    check "$(test -f templates/blog-page.html && echo true || echo false)" \
-        "Blog page template exists"
+    check "$(test -f templates/devlog-page.html && echo true || echo false)" \
+        "Devlog page template exists"
 
     check "$(test -f templates/categories/single.html && echo true || echo false)" \
         "Category taxonomy template exists"
@@ -87,14 +97,17 @@ verify-build:
     check "$(test -f public/index.html && echo true || echo false)" \
         "Index page generated"
 
-    check "$(test -f public/about/index.html && echo true || echo false)" \
-        "About page generated"
+    check "$(grep -q 'about-hero' public/index.html 2>/dev/null && echo true || echo false)" \
+        "Home page renders About"
+
+    check "$(test -f public/devlog/index.html && echo true || echo false)" \
+        "Devlog page generated"
 
     check "$(test -f public/404.html && echo true || echo false)" \
         "404 page generated"
 
     # Feed and categories only generated when posts exist
-    if ls content/blog/*.md 2>/dev/null | grep -qv _index; then
+    if ls content/devlog/*.md 2>/dev/null | grep -qv _index; then
         check "$(test -f public/atom.xml && echo true || echo false)" \
             "Atom feed generated"
         check "$(test -f public/categories/index.html && echo true || echo false)" \

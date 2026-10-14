@@ -41,14 +41,13 @@ link = "https://www.piurizza.com/atom.xml"
 
 [[extra.nav]]
 text = "About"
-url = "/about/"
+url = "/"
 icon = "fa-comments"
 
 [[extra.nav]]
-text = "Blog"
-url = "/"
-icon = "fa-pencil"
-layout = "post"
+text = "Devlog"
+url = "/devlog/"
+icon = "fa-code"
 
 [[extra.nav]]
 text = "Projects"
