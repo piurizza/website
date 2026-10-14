@@ -38,7 +38,7 @@ function doSearch(term) {
         var body = doc.body || '';
         var url = ref;
 
-        if (title === 'Blog' || title === 'About' || url.includes('/categories/')) {
+        if (title === 'Devlog' || title === 'About' || url.includes('/categories/')) {
             continue;
         }
 

@@ -1,72 +1,29 @@
 {% extends "base.html" %}
-{% import "macros.html" as macros %}
 
-{% block page_title %}Blog{% endblock page_title %}
+{% block title %}{{ section.title }}{% endblock title %}
+{% block description %}{{ section.description | default(value=config.description) }}{% endblock description %}
 
-{% block search %}{% endblock search %}
+{% block og %}
+<meta content="{{ section.title }}" property="og:title">
+<meta content="website" property="og:type">
+<meta content="{{ section.description | default(value=config.description) }}" property="og:description">
+<meta content="{{ section.permalink }}" property="og:url">
+<meta content="{{ config.base_url }}/img/avatar.svg" property="og:image">
+{% endblock og %}
 
-{% block nav_layout %}post{% endblock nav_layout %}
+{% block page_title %}{{ section.title }}{% endblock page_title %}
 
 {% block content %}
 <div class="well">
-    <div class="list-group">
-      {% set blog = get_section(path="blog/_index.md") %}
-      {% for page in blog.pages %}
-      <div class="list-group-item">
-        <div class="row-content">
-          <div class="least-content">{{ page.date | date(format="%d %b %Y") }}</div>
-          <h4 class="list-group-item-heading"><a href="{{ page.permalink }}">{{ page.title }}</a></h4>
-          {% if page.description %}
-            <p class="list-group-item-summary">{{ page.description }}</p>
-          {% endif %}
-          <p class="list-group-item-text">
-            {% if page.taxonomies.categories is defined %}
-              {{ macros::category_links(categories=page.taxonomies.categories, prefix="#") }}
-            {% endif %}
-          </p>
+    <div class="about-hero">
+        <img class="about-avatar" src="{{ config.extra.logo }}" alt="Portrait of {{ config.author }}">
+        <div class="about-text">
+            <h1 class="about-title">I am Pietro</h1>
+            <p class="about-subtitle">{{ config.extra.about }}</p>
         </div>
-      </div>
-      <div class="list-group-separator"></div>
-      {% endfor %}
     </div>
-
-    {% if paginator is defined and paginator.number_pagers > 1 %}
-    <ul class="pager">
-      {% if paginator.previous %}
-        <li class="previous">
-          <a href="{{ paginator.previous }}" rel="prev" hreflang="en">&laquo;</a>
-        </li>
-      {% else %}
-        <li class="previous disabled"><span aria-hidden="true">&laquo;</span></li>
-      {% endif %}
-
-      <li><a href="/">First</a></li>
-
-      {% for pager in range(end=paginator.number_pagers) %}
-        {% set page_num = pager + 1 %}
-        {% if page_num == paginator.current_index %}
-          <li class="active">
-             <a>{{ page_num }}<span class="sr-only">(current)</span></a>
-          </li>
-        {% elif page_num == 1 %}
-          <li><a href="/">{{ page_num }}</a></li>
-        {% else %}
-          <li>
-            <a href="/page/{{ page_num }}/">{{ page_num }}</a>
-          </li>
-        {% endif %}
-      {% endfor %}
-
-      <li><a href="/page/{{ paginator.number_pagers }}/">Last</a></li>
-
-      {% if paginator.next %}
-        <li class="next">
-          <a href="{{ paginator.next }}" rel="next" hreflang="en">&raquo;</a>
-        </li>
-      {% else %}
-        <li class="next disabled"><span>&raquo;</span></li>
-      {% endif %}
-    </ul>
-    {% endif %}
+    <div>
+    	{{ section.content | safe }}
+    </div>
 </div>
 {% endblock content %}
